@@ -1,3 +1,4 @@
+<%@page import="org.omg.PortableInterceptor.SYSTEM_EXCEPTION"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -23,20 +24,6 @@
 	$(function() {
 		$("#portfolio_select").selectmenu();
 	});
-	$(function() {
-		$("#portfolio_select").change(function() {
-			var selected = $(this).val(); // or this.value
-			alert(selected);
-		});
-	});
-
-	$(window).bind('scroll', function() {
-		if ($(window).scrollTop() > num) {
-			$('.menu').addClass('fixed');
-		} else {
-			$('.menu').removeClass('fixed');
-		}
-	});
 </script>
 <style>
 fieldset {
@@ -59,31 +46,14 @@ select {
 </head>
 <body>
 
+	<%@ page import="com.web.sur.Order"%>
 	<%@ page import="com.web.sur.Portfolio"%>
 	<%@ page import="java.util.*"%>
 	<%
-		HashMap<String, String> order1 = new HashMap<String, String>();
-		order1.put("Order ID", "test2");
-		order1.put("Block ID", "test1");
-		order1.put("Symbol", "test1");
-		order1.put("Trader ID", "test1");
-		order1.put("Side", "test1");
-		order1.put("Market Price", "test1");
-		order1.put("Qty", "test1");
-		order1.put("Date", "test1");
-		order1.put("Time", "test1");
-		order1.put("Status", "test2");
-		HashMap<String, String> order2 = new HashMap<String, String>();
-		order2.put("Order ID", "test2");
-		order2.put("Block ID", "test2");
-		order2.put("Symbol", "test2");
-		order2.put("Trader ID", "test2");
-		order2.put("Side", "test2");
-		order2.put("Market Price", "test2");
-		order2.put("Qty", "test2");
-		order2.put("Date", "test2");
-		order2.put("Time", "test2");
-		order2.put("Status", "test2");
+		Order order1 = new Order("O123", "B123", "AAPL", "T100", "BUY", "$100", "50", "test1", "test1", "", "",
+				"LOGGED");
+		Order order2 = new Order("O122", "B121", "SAPIENT", "T101", "SELL", "$50", "100", "test1", "test1", "", "",
+				"PENDING");
 
 		Portfolio portfolio1 = new Portfolio("Portfolio 1");
 		portfolio1.addOrder(order1);
@@ -106,9 +76,9 @@ select {
 			<div id="accordion">
 
 				<%
-				for(Portfolio portfolio: portfolioList){
+					for (Portfolio portfolio : portfolioList) {
 				%>
-				<h3><%=portfolio.getName() %></h3>
+				<h3><%=portfolio.getName()%></h3>
 				<div>
 					<div id="DataTables_Table_4_wrapper" class="dataTables_wrapper">
 						<table class="demo compact dataTable" width="100%"
@@ -155,6 +125,14 @@ select {
 									<th class="sorting" tabindex="0"
 										aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
 										aria-label="Salary: activate to sort column ascending"
+										style="width: 42px;">Type</th>
+									<th class="sorting" tabindex="0"
+										aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
+										aria-label="Salary: activate to sort column ascending"
+										style="width: 42px;">Type Parameter</th>
+									<th class="sorting" tabindex="0"
+										aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
+										aria-label="Salary: activate to sort column ascending"
 										style="width: 42px;">Status</th>
 								</tr>
 							</thead>
@@ -166,11 +144,13 @@ select {
 								<!-- This Type of Loop, Designed to print attributes and populate a table of predefined size. -->
 
 								<%
-									for (HashMap Order : portfolio.getOrderList()) {
+									for (Order Order : portfolio.getOrderList()) {
 								%>
-								<tr role="row" class="odd">
+								<tr role="row" class="odd" id=<%=Order.getStatus()%>>
+
+
 									<%
-										for (Object attribute : Order.values()) {
+										for (Object attribute : Order.getAttributes()) {
 									%>
 									<td><%=attribute%></td>
 									<%
@@ -187,19 +167,21 @@ select {
 						</table>
 					</div>
 				</div>
-				<% }%>
+				<%
+					}
+				%>
 			</div>
 		</div>
 		<div id="PM_position">
 			<p>Position Tab</p>
 
 			<label for="portfolio">Select Portfolio</label> <select
-				name="portfolio_select" id="portfolio_select">
-				<option selected="selected" value="p1">Portfolio 1</option>
-				<option value="p2">Portfolio 2</option>
-				<option value="p3">Portfolio 3</option>
-
-			</select>
+				name="selectmenu1" id="portfolioselect">
+				<option value="portfolio1">Portfolio1</option>
+				<option value="portfolio2">Portfolio2</option>
+				<option value="portfolio3">Portfolio3</option>
+				<option value="portfolio4">Portfolio4</option>
+			</select> </select>
 		</div>
 		<div id="PM_create_order">
 			<p>Create Order Tab</p>

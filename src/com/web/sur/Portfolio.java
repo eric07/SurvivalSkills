@@ -2,24 +2,23 @@ package com.web.sur;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Portfolio {
 	String portName;
-	ArrayList<HashMap<String, String>> orderList;
+	ArrayList<Order> orderList;
 	
 	public Portfolio(String portName ){
 		this.portName = portName;
-		this.orderList = new ArrayList<HashMap<String, String>>();
+		this.orderList = new ArrayList<Order>();
 	}
 	
 	
 	
-	public void addOrder(HashMap order){
+	public void addOrder(Order order){
 		this.orderList.add(order);
 	}
 	
-	public ArrayList<HashMap<String, String>> getOrderList(){
+	public ArrayList<Order> getOrderList(){
 		return this.orderList;
 	}
 	public String getName(){
