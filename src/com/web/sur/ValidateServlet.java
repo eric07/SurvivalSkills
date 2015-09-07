@@ -68,10 +68,13 @@ public class ValidateServlet extends HttpServlet {
 		
 		ServiceUser su=new ServiceUser(connection, username, password);
 		String status=su.login();
+		
 		if(status.equals("pm"))
 		{
+			
 			HttpSession hsession=request.getSession();
-			hsession.setAttribute(username, password);
+			hsession.setAttribute("username",username);
+			hsession.setAttribute("password",password);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
 			dispatcher.forward(request, response);
 			
@@ -79,7 +82,9 @@ public class ValidateServlet extends HttpServlet {
 		else if(status.equals("pmtd"))
 		{
 			HttpSession hsession=request.getSession();
-			hsession.setAttribute(username, password);
+		
+			hsession.setAttribute("username",username);
+			hsession.setAttribute("password",password);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("mainpm.jsp");
 			dispatcher.forward(request, response);
 			
@@ -87,7 +92,8 @@ public class ValidateServlet extends HttpServlet {
 		else if(status.equals("trader"))
 		{
 			HttpSession hsession=request.getSession();
-			hsession.setAttribute(username, password);
+			hsession.setAttribute("username",username);
+			hsession.setAttribute("password",password);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("maintd.jsp");
 			dispatcher.forward(request, response);
 			
