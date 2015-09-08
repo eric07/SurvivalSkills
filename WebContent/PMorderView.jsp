@@ -22,6 +22,7 @@
 		});
 	});
 	
+	
 	$(document).on('change','.port_select', function() {
 		$(".portfolio_options").hide();
 		  var portfolio = $(this).val(); 
@@ -29,6 +30,8 @@
 		});
 	$(document).ready(function(){
 	    alert("Doc Ready");
+	    $(".portfolio_options").hide();
+	    $('#' +"Portfolio1" + '_option').show();
 	    });
 </script>
 <style>
