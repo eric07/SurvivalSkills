@@ -75,7 +75,7 @@ public class ValidateServlet extends HttpServlet {
 			HttpSession hsession=request.getSession();
 			hsession.setAttribute("username",username);
 			hsession.setAttribute("password",password);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("test2.jsp");
 			dispatcher.forward(request, response);
 			
 		}
@@ -85,7 +85,7 @@ public class ValidateServlet extends HttpServlet {
 		
 			hsession.setAttribute("username",username);
 			hsession.setAttribute("password",password);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("mainpm.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("test2.jsp");
 			dispatcher.forward(request, response);
 			
 		}
