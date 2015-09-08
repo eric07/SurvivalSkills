@@ -21,12 +21,20 @@
 			active : 2
 		});
 	});
-	
-	
 	$(document).on('change','.port_select', function() {
 		$(".portfolio_options").hide();
 		  var portfolio = $(this).val(); 
 		  $('#' +portfolio + '_option').show();
+		});
+	$(document).on('change','.status_select', function() {
+		  var status = $(this).val();
+		  if(status=="SHOWALL"){
+			  $(".orderrow").show()
+		  }
+		  else{
+		  $(".orderrow").hide();
+		  $("."+status).show();
+		  }
 		});
 	$(document).ready(function(){
 	    alert("Doc Ready");
@@ -54,7 +62,6 @@ select {
 </style>
 </head>
 <body>
-	
 	<%@ page import="com.web.sur.*"%>
 
 	<%@ page import="java.util.*"%>
@@ -71,8 +78,8 @@ select {
 		Portfolio portfolio1 = new Portfolio("Portfolio1");
 		portfolio1.addOrder(order1);
 		portfolio1.addOrder(order2);
-		//System.out.println(stock1.getAttributes());
-		//portfolio1.addStock(stock1);
+		
+		portfolio1.addStock(stock1);
 		portfolio1.addStock(stock2);
 		portfolio1.addStock(stock3);
 		Portfolio portfolio2 = new Portfolio("Portfolio2");
@@ -91,15 +98,22 @@ select {
 			<li><a href="#PM_create_order">Create Order</a></li>
 		</ul>
 		<div id="PM_order_view">
-			<p>OverView Tab Goes Here</p>
+			<div>
+			<label for="status_select">Filter ByStatus:</label> <select
+				name="status_select" class="status_select">
+				<option value ="SHOWALL">Show All</option>
+				<option value="LOGGED">LOGGED</option>
+				<option value="OPEN">OPEN</option>
+				<option value="PENDING">PENDING</option>
+				<option value="FILLED">FILLED</option>
+				</select>
+			</div>
 			<div id="accordion">
-
 				<%
 					for (Portfolio portfolio : portfolioList) {
 				%>
 				<h3><%=portfolio.getName()%></h3>
 				<div>
-				
 						<table class="orderview_table" width="100%"
 							id="<%=portfolio.getName()%>_table" role="grid" style="width: 100%;">
 							<thead>
@@ -157,17 +171,11 @@ select {
 							</thead>
 
 							<tbody>
-
-
-
 								<!-- This Type of Loop, Designed to print attributes and populate a table of predefined size. -->
-
 								<%
 									for (Order Order : portfolio.getOrderList()) {
 								%>
-								<tr role="row" class="odd" id=<%=Order.getStatus()%>>
-
-
+								<div><tr  class="orderrow <%=Order.getStatus()%>">
 									<%
 										for (Object attribute : Order.getAttributes()) {
 									%>
@@ -176,6 +184,7 @@ select {
 										}
 									%>
 								</tr>
+								</div>
 								<%
 									}
 								%>
@@ -201,15 +210,14 @@ select {
 					for (Portfolio portfolio : portfolioList) {
 				%>
 				<option value=<%=portfolio.getName()%>><%=portfolio.getName()%></option>
-				<%
-				}%>
+				<% }%>
 			</select> </select>
 			<div>
 			<%
 					for (Portfolio portfolio : portfolioList) {
 				%>
 			<table class="portfolio_options" width="100%"
-							<%System.out.println(portfolio.getName()+"_option"); %>
+							
 							id=<%=(portfolio.getName()+"_option")%> role="grid" style="width: 100%;">
 							<thead>
 								<tr role="row">
