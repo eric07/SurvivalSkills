@@ -8,10 +8,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Layout</title>
 <link rel="stylesheet" href="jquery-ui.css">
-<link rel="stylesheet" href="customMine.css">
 <script src="jquery.js"></script>
 <script src="jquery-ui.js"></script>
 <script>
+	
 	$(function() {
 		$("#tabs").tabs();
 	});
@@ -21,9 +21,15 @@
 			active : 2
 		});
 	});
-	$(function() {
-		$("#portfolio_select").selectmenu();
-	});
+	
+	$(document).on('change','.port_select', function() {
+		$(".portfolio_options").hide();
+		  var portfolio = $(this).val(); 
+		  $('#' +portfolio + '_option').show();
+		});
+	$(document).ready(function(){
+	    alert("Doc Ready");
+	    });
 </script>
 <style>
 fieldset {
@@ -176,12 +182,18 @@ select {
 			<p>Position Tab</p>
 
 			<label for="portfolio">Select Portfolio</label> <select
-				name="selectmenu1" id="portfolioselect">
+				name="selectmenu1" class="port_select">
 				<option value="portfolio1">Portfolio1</option>
 				<option value="portfolio2">Portfolio2</option>
 				<option value="portfolio3">Portfolio3</option>
 				<option value="portfolio4">Portfolio4</option>
 			</select> </select>
+			<div>
+			<p id="portfolio1_option" class="portfolio_options">Portfolio1 Table</p>
+			<p id="portfolio2_option" class="portfolio_options">Portfolio2 Table</p>
+			<p id="portfolio3_option" class="portfolio_options">Portfolio3 Table</p>
+			<p id="portfolio4_option" class="portfolio_options">Portfolio4 Table</p>
+			</div>
 		</div>
 		<div id="PM_create_order">
 			<p>Create Order Tab</p>
