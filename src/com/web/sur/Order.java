@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Order {
 	private String OrderID, BlockID, Symbol, TraderID, Side, Price,
-	Qty,Date, Time, Tradetype,TradeParam,Status;
+	Qty,Date, Time, TradeType,TradeParam,Status;
 
 	/**
 	 Constructor for Order
@@ -21,7 +21,7 @@ public class Order {
 		this.Qty=Qty;
 		this.Date=Date;
 		this.Time=Time;
-		this.Tradetype=Tradetype;
+		this.TradeType=Tradetype;
 		this.TradeParam=TradeParam;
 		this.Status=Status;
 	}
@@ -67,23 +67,12 @@ public class Order {
 	public void setQty(String qty) {
 		this.Qty = qty;
 	}
-	public String getDate() {
-		return this.Date;
-	}
-	public void setDate(String date) {
-		this.Date = date;
-	}
-	public String getTime() {
-		return this.Time;
-	}
-	public void setTime(String time) {
-		this.Time = time;
-	}
+
 	public String getTradetype() {
-		return this.Tradetype;
+		return this.TradeType;
 	}
 	public void setTradetype(String tradetype) {
-		this.Tradetype = tradetype;
+		this.TradeType = tradetype;
 	}
 	public String getTradeParam() {
 		return this.TradeParam;
@@ -99,10 +88,24 @@ public class Order {
 	}
 	public String[] getAttributes(){
 		 String[] stringArr ={OrderID, BlockID, Symbol, TraderID, Side, Price,
-			Qty,Date, Time, Tradetype,TradeParam,Status};
+			Qty,Date, Time, TradeType,TradeParam,Status};
 		 return stringArr;
 		
 	}
+	public String[] getBlockAttributes(){
+		 String[] stringArr ={OrderID, Status,Symbol,Side,TradeType,TradeParam,Qty};
+		 return stringArr;
+		
+	}
+	@Override
+	public String toString() {
+		String outstring ="";
+		for (String string : this.getAttributes()){
+			outstring+= (", "+string);
+		}
+		return outstring;
+	}
+	
 	
 	
 
