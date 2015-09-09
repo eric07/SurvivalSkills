@@ -103,6 +103,14 @@ public class Order {
 		 return stringArr;
 		
 	}
+	@Override
+	public String toString() {
+		return "Order [OrderID=" + OrderID + ", BlockID=" + BlockID
+				+ ", Symbol=" + Symbol + ", TraderID=" + TraderID + ", Side="
+				+ Side + ", Price=" + Price + ", Qty=" + Qty + ", Date=" + Date
+				+ ", Time=" + Time + ", Tradetype=" + Tradetype
+				+ ", TradeParam=" + TradeParam + ", Status=" + Status + "]";
+	}
 	
 	
 
