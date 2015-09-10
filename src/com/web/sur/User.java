@@ -4,5 +4,5 @@ public class User {
  int userid;
  String username;
  String password;
- String role;
+ String acc_type;
 }

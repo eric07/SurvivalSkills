@@ -15,7 +15,7 @@
   </context-param>
   <context-param>
     <param-name>url</param-name>
-    <param-value>jdbc:mysql://10.209.70.23:3306/webtardb22</param-value>
+    <param-value>jdbc:mysql://10.209.70.23:3306/webtardb3</param-value>
   </context-param>
   <context-param>
     <param-name>username</param-name>
@@ -25,4 +25,12 @@
     <param-name>password</param-name>
     <param-value>root</param-value>
   </context-param>
+  <servlet>
+    <servlet-name>PositionServlet</servlet-name>
+    <servlet-class>com.web.sur.PositionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PositionServlet</servlet-name>
+    <url-pattern>/PositionServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

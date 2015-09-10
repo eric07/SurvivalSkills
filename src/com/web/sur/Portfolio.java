@@ -1,30 +1,48 @@
 package com.web.sur;
 
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class Portfolio {
+
 	String portName;
-	ArrayList<Order> orderList;
-	
-	public Portfolio(String portName ){
+	ArrayList<Order> orderList = new ArrayList<Order>();
+	ArrayList<Stock> stockList;
+
+	public Portfolio(String portName, ArrayList<Order> orderlist) {
 		this.portName = portName;
-		this.orderList = new ArrayList<Order>();
+		this.orderList = orderlist;
+		this.stockList = new ArrayList<Stock>();
 	}
-	
-	
-	
-	public void addOrder(Order order){
-		this.orderList.add(order);
+
+	@Override
+	public String toString() {
+		return "Port [Portfolioname=" + portName + ", orderlist=" + orderList
+				+ "]";
 	}
-	
-	public ArrayList<Order> getOrderList(){
+
+	// public void addOrder(Order order){
+	// this.orderList.add(order);
+	// }
+
+	public ArrayList<Order> getOrderList() {
 		return this.orderList;
 	}
-	public String getName(){
+
+	public String getName() {
 		return this.portName;
 	}
-	
-	
+
+	public void addStock(Stock stock) {
+		this.stockList.add(stock);
+	}
+
+	public void addOrder(Order order) {
+		this.orderList.add(order);
+	}
+
+	public ArrayList<Stock> getStockList() {
+		return this.stockList;
+	}
 
 }

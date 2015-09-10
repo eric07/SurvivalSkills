@@ -32,7 +32,7 @@ public class ServiceUser {
 				     rs=ps.executeQuery();
 				    
 					if(rs.next()){
-						String role=rs.getString("role");
+						String role=rs.getString("acc_type");
 						
 				        if(role.equals("pm"))
 				        {

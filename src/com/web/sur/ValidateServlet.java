@@ -75,7 +75,7 @@ public class ValidateServlet extends HttpServlet {
 			HttpSession hsession=request.getSession();
 			hsession.setAttribute("username",username);
 			hsession.setAttribute("password",password);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/PMOrderViewServlet");
 			dispatcher.forward(request, response);
 			
 		}
@@ -94,7 +94,7 @@ public class ValidateServlet extends HttpServlet {
 			HttpSession hsession=request.getSession();
 			hsession.setAttribute("username",username);
 			hsession.setAttribute("password",password);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("maintd.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("TraderDashBoard.jsp");
 			dispatcher.forward(request, response);
 			
 		}
@@ -102,16 +102,11 @@ public class ValidateServlet extends HttpServlet {
 		{
 			
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("index_error.html");
 			dispatcher.forward(request, response);
 			
 		}
-	}
-		
-	
-//		boolean flag=false;
-		
-				
+	}				
 
 	/**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)

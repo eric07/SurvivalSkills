@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -67,28 +69,21 @@ public class PMOrderViewServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		PrintWriter out = response.getWriter();
-
-		HttpSession session = request.getSession();
-		String uId = session.getAttribute("username").toString();
-		System.out.println(uId);
-
-		String sql = "select * from webtardb22.order where pm_id='p001'";
-		// boolean flag=false;
-		ResultSet rs = null;
-		try {
-			PreparedStatement ps = connection.prepareStatement(sql);
-//			ps.setString(1, uId);
-			// ps.setString(2, password);
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-				String orderID = rs.getString("order_id");
-				System.out.println(orderID);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		HttpSession hs=request.getSession();
+		String uID = hs.getAttribute("username").toString();
+		
+		
+		ServicePortfolio sp=new ServicePortfolio(connection, uID);
+		ArrayList<Portfolio> pl=sp.getPortfolios();
+		
+		hs.setAttribute("Portlist", pl);
+		request.setAttribute("Portlist", pl);
+		
+		RequestDispatcher rd = request.getRequestDispatcher("PMorderView.jsp");
+		rd.forward(request, response);
+	
+		
+		
 
 	}
 
