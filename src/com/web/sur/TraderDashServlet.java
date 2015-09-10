@@ -42,49 +42,29 @@ public class TraderDashServlet extends HttpServlet {
     /**
 	 * given a block, a list of corresponding orders is returned
 	 */
-	//public ArrayList<Order> getOrdersByBlock(String blockid){
     public ArrayList<Order> getOrdersByBlock(Block block){
 		ArrayList<Order> orders = new ArrayList<Order>();
 		try {
-			//String sql = "SELECT * FROM orders WHERE trader_id = ?";
 			String sql = "SELECT * FROM orders WHERE block_id = ?";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, block.getBlock_id());
-			//ps.setString(1, "blocks");
 			ResultSet rs = ps.executeQuery();
 			ResultSet rs2 = null;
 			while(rs.next()){
-				//price - get from 'securities' table
-				/*
-				 	1 orderid
-					2 symbol
-					3 qty
-					4 paramprice
-					5 side
-					6 openqty
-					7 alocqty
-					8 status
-					9 timestamp (convert to date/time)
-					10 type
-					11 pmid
-					12 traderid
-					13 portid
-					14 blockid
-					15 comment
-					16 securitytype
-				*/
+				//grab price from 'securities' table
 				sql = "SELECT market_price FROM securities WHERE symbol = ?";
 				ps = connection.prepareStatement(sql);
 				ps.setString(1,  rs.getString(2));
 				rs2 = ps.executeQuery();
 				rs2.next();
-				String[] datetime = rs.getString(9).split(" ");
+				/*String[] datetime = rs.getString("timestamp").split(" ");
 				String date = datetime[0];
-				String time = datetime[1];
-				orders.add(new Order(rs.getString(1), rs.getString(14),
-						rs.getString(2), rs.getString(12), rs.getString(5),
-						rs2.getString(1), rs.getString(3), date,
-						time, rs.getString(10), rs.getString(4), rs.getString(8)));
+				String time = datetime[1];*/
+				orders.add(new Order(rs.getString("order_id"), rs.getString("block_id"),
+						rs.getString("symbol"), rs.getString("trader_id"), rs.getString("side"),
+						rs2.getFloat("market_price"), rs.getInt("qty"),
+						rs.getString("timestamp"), rs.getString("type"), rs.getFloat("parameter_price"),
+						rs.getString("status"), rs.getString("port_id")));
 			}
 			
 		} catch (SQLException e) {
@@ -103,41 +83,23 @@ public class TraderDashServlet extends HttpServlet {
 			String sql = "SELECT * FROM orders WHERE trader_id = ?";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, userid);
-			//ps.setString(1, "blocks");
 			ResultSet rs = ps.executeQuery();
 			ResultSet rs2 = null;
 			while(rs.next()){
-				//price - get from 'securities' table
-				/*
-				 	1 orderid
-					2 symbol
-					3 qty
-					4 paramprice
-					5 side
-					6 openqty
-					7 alocqty
-					8 status
-					9 timestamp (convert to date/time)
-					10 type
-					11 pmid
-					12 traderid
-					13 portid
-					14 blockid
-					15 comment
-					16 securitytype
-				*/
+				//
 				sql = "SELECT market_price FROM securities WHERE symbol = ?";
 				ps = connection.prepareStatement(sql);
 				ps.setString(1,  rs.getString(2));
 				rs2 = ps.executeQuery();
 				rs2.next();
-				String[] datetime = rs.getString(9).split(" ");
+				/*String[] datetime = rs.getString("timestamp").split(" ");
 				String date = datetime[0];
-				String time = datetime[1];
-				orders.add(new Order(rs.getString(1), rs.getString(14),
-						rs.getString(2), rs.getString(12), rs.getString(5),
-						rs2.getString(1), rs.getString(3), date,
-						time, rs.getString(10), rs.getString(4), rs.getString(8)));
+				String time = datetime[1];*/
+				orders.add(new Order(rs.getString("order_id"), rs.getString("block_id"),
+						rs.getString("symbol"), rs.getString("trader_id"), rs.getString("side"),
+						rs2.getFloat("market_price"), rs.getInt("qty"),
+						rs.getString("timestamp"), rs.getString("type"), rs.getFloat("parameter_price"),
+						rs.getString("status"), rs.getString("port_id")));
 			}
 			
 		} catch (SQLException e) {
@@ -156,26 +118,16 @@ public class TraderDashServlet extends HttpServlet {
 			String sql = "SELECT DISTINCT blocks.* FROM blocks, orders WHERE trader_id = ? AND blocks.block_id = orders.block_id";
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, userid);
-			//ps.setString(1, "blocks");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
-				/*
-				 	1 blockid
-					2 status
-					3 blockmethod
-					4 timestamp
-					5 totalqty
-					6 openqty
-					7 allocqty
-					8 symbol
-				*/
-				String[] datetime = rs.getString(4).split(" ");
+				/*String[] datetime = rs.getString("timestamp").split(" ");
 				String date = datetime[0];
-				String time = datetime[1];
+				String time = datetime[1];*/
 				
-				blocks.add(new Block(rs.getString(1), rs.getString(2),
-						rs.getString(3), date, time, 
-						rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getString(8)));
+				blocks.add(new Block(rs.getString("block_id"), rs.getString("status"),
+						rs.getString("block_method"), rs.getString("timestamp"), 
+						rs.getInt("total_qty"), rs.getInt("open_qty"),
+						rs.getInt("alloc_qty"), rs.getString("symbol")));
 			}
 			
 		} catch (SQLException e) {
@@ -184,18 +136,6 @@ public class TraderDashServlet extends HttpServlet {
 		}
 		return blocks;		
 	}
-	
-	/**
-	 * given a blockid, a map to corresponding lists of orders is returned
-	 */
-	/*public HashMap<Block, ArrayList<Order>> getBlocksOfOrders(String userid){
-		HashMap<Block, ArrayList<Order>> blocksOfOrders = new HashMap<Block, ArrayList<Order>>(); 
-		ArrayList<Block> blocks = getBlocksByTrader(userid);
-		for(Block b: blocks){
-			blocksOfOrders.put(b, getOrdersByBlock(b));
-		}
-		return blocksOfOrders;		
-	}*/
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -225,7 +165,7 @@ public class TraderDashServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("in doGet...");
-		/*for(Order o: getOrders(USERID)){
+		/*for(Order o: getOrdersByTrader(USERID)){
 			System.out.println(o);
 		}*/
 		for(Block b: getBlocksByTrader(USERID)){
@@ -235,11 +175,6 @@ public class TraderDashServlet extends HttpServlet {
 				System.out.println(o);
 			System.out.println("----------");
 		}
-		//for(Block b: getBlocksOfOrders(USERID).keySet()){
-			//System.out.println(b + ":");
-			//for(Order o: getBlocksOfOrders(USERID).get(b))
-			//	System.out.println(o);
-		//}
 	}
 
 	/**
