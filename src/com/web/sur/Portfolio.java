@@ -8,6 +8,7 @@ public class Portfolio {
 	String portName;
 	ArrayList<Order> orderList = new ArrayList<Order>();
 	ArrayList<Stock> stockList;
+	public ArrayList<Positions> poslist ;
 
 	public Portfolio(String portName, ArrayList<Order> orderlist) {
 		this.portName = portName;
@@ -15,9 +16,14 @@ public class Portfolio {
 		this.stockList = new ArrayList<Stock>();
 	}
 
+	public Portfolio(String portName) {
+		this.portName = portName;
+		this. poslist = new ArrayList<Positions>();
+	}
+	
 	@Override
 	public String toString() {
-		return "Port [Portfolioname=" + portName + ", orderlist=" + orderList
+		return "Port [Portfolioname=" + portName + ", poslist=" + poslist
 				+ "]";
 	}
 
@@ -43,6 +49,10 @@ public class Portfolio {
 
 	public ArrayList<Stock> getStockList() {
 		return this.stockList;
+	}
+	
+	public void addPos(Positions Position){
+		this.poslist.add(Position);
 	}
 
 }

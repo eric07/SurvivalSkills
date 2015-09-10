@@ -74,17 +74,17 @@ public class PositionServlet extends HttpServlet {
 		HttpSession hs=request.getSession();
 		String pmname=(String) hs.getAttribute("username");
 		ServicePosition sp1=new ServicePosition(connection,pmname);
-		ArrayList<Serializable> pl=new ArrayList<Serializable>();
+		ArrayList<Portfolio> pl=new ArrayList<Portfolio>();
 		pl=sp1.getPositions();
 		
-		request.setAttribute("Positionlist", pl);
-		request.setAttribute("pname",pl.get(0));
-		request.setAttribute("pmid", pl.get(1));
+		ArrayList<String> portnames = new ArrayList<String>();
+		for (Portfolio p : pl){
+			portnames.add(p.getName());
+		}
 		
-		request.setAttribute("pnlist", (ArrayList<String>)pl.get(2));
-		request.setAttribute("Positionlist", (ArrayList<Positions>)pl.get(3));
-//		System.out.println("Positions Servlet");
-		out.println(request.getAttribute("Positionlist"));
+		request.setAttribute("Portfoliolist", pl);
+		request.setAttribute("pname",pmname);
+		request.setAttribute("portnames",portnames);
 		RequestDispatcher rd = request.getRequestDispatcher("Positions.jsp");
 		rd.forward(request, response);
 		

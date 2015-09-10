@@ -49,6 +49,10 @@ public class ServicePortfolio {
 						
 						String price = rs.getString("market_price");
 						String qty = rs.getString("qty");
+						if(qty.contains("-"))
+						{
+							qty=qty.substring(1);
+						}
 						String tradetype=rs.getString("type");
 						String tradeparam=rs.getString("parameter_price");
 						

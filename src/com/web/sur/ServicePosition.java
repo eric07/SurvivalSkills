@@ -17,84 +17,82 @@ public class ServicePosition {
 
 	Connection con;
 	String pmname;
-	public ServicePosition(Connection con1,String username) {
+
+	public ServicePosition(Connection con1, String username) {
 		this.con = con1;
-		this.pmname=username;
+		this.pmname = username;
 	}
 
-	ArrayList<Serializable> getPositions() {
-		ResultSet rs;
-		ResultSet rs1;
-		ResultSet rs2;
-		
-	
-		ArrayList<Positions> plist = new ArrayList<Positions>();
+	ArrayList<Portfolio> getPositions() {
+		ResultSet rsUser;
+		ResultSet rsQty;
+		ResultSet rsPort;
 
-		ArrayList<Serializable> poslist = new ArrayList<Serializable>();
-		ArrayList<String> pnlist = new ArrayList<String>();
-		
-		String pmid;
-		String sql = "select s.symbol,s.closing_price,sum(o.qty) as totalqty from (orders o left outer join securities s on o.symbol=s.symbol) where o.pm_id=? group by s.symbol having sum(o.qty)";
-		String sql1="select user_id from users where username=?";
-		String sql2="select port_name from portfolios where pm_id=?";
-		int index=0;
+		ArrayList<Portfolio> portlist = new ArrayList<Portfolio>();
+		ArrayList<String> portnames = new ArrayList<String>();
+		Positions position = new Positions();
+
+		String symbol;	String qty;	String price;	
+		Float ivalue;	String value;
+		String user_id = null; String port_id = null;
+
+		String sqlQty = "select p.pm_id, p.port_name, o.order_id, o.symbol, sum(o.qty) as totalQty, s.closing_price from webtardb3.portfolios p,webtardb3.orders o, webtardb3.securities s where o.pm_id =? and o.pm_id = p.pm_id and p.port_id = o.port_id and p.port_id = ? and o.symbol=s.symbol group by o.symbol";
+		String sqlUser = "select user_id from users where username=?";
+		String sqlPort = "select port_id, port_name from portfolios where pm_id=?";
+		int i = 0;
 		try {
-						
-						PreparedStatement ps1 = con.prepareStatement(sql1);
-						ps1.setString(1, pmname);
-						rs1 = ps1.executeQuery();
-						rs1.next();
-						pmid=rs1.getString("user_id");
-						
-						PreparedStatement ps = con.prepareStatement(sql);
-						ps.setString(1, pmid);
-						rs = ps.executeQuery();
-						
-						PreparedStatement ps2 = con.prepareStatement(sql2);
-						ps2.setString(1, pmid);
-						rs2 = ps2.executeQuery();
-						
-			
-				while (rs.next()) {
-					
-						String symbol=rs.getString("symbol");
-						int qty=rs.getInt("totalqty");
-						float cp=rs.getFloat("closing_price");
-						float cv=qty*cp;
-						
-						
-					Positions p=new Positions(symbol, qty, cp, cv);
-					
-						plist.add(p);
-						
-						
-					} 
-			
-				while(rs2.next())
-				{
-					String pn1=rs2.getString("port_name");
-					pnlist.add(pn1);
+			// Get user_id of current user
+			PreparedStatement psUser = con.prepareStatement(sqlUser);
+			psUser.setString(1, pmname);
+			rsUser = psUser.executeQuery();
+			if (rsUser.next()) {
+				user_id = rsUser.getString("user_id");
+				System.out.println(user_id);
+			}
+			// Get portfolios of current user
+			PreparedStatement psPort = con.prepareStatement(sqlPort);
+			psPort.setString(1, user_id);
+			rsPort = psPort.executeQuery();
+			while (rsPort.next()) {
+				Portfolio p = new Portfolio(rsPort.getString("port_name"));
+				port_id = rsPort.getString("port_id");
+				portnames.add(rsPort.getString("port_name"));
+//				System.out.println(port_id);
+				PreparedStatement psQty = con.prepareStatement(sqlQty);
+				psQty.setString(1, user_id);
+				psQty.setString(2, port_id);
+				rsQty = psQty.executeQuery();
+				while (rsQty.next()) {
+//					System.out.println(rsQty.getString("o.symbol"));
+					symbol = rsQty.getString("o.symbol");
+					qty = rsQty.getString("totalQty");
+					price = rsQty.getString("s.closing_price");
+					ivalue = Float.parseFloat(price) * Float.parseFloat(qty);
+					value = ivalue.toString();
+					if (!value.equals("0")) {
+						position = new Positions (symbol, qty, price, value);
+//						position.setSymbol(symbol);
+//						position.setTotalqty(qty);
+//						position.setclosingprice(price);
+//						position.setclosingvalue(value);
+//						System.out.println(position);
+						p.addPos(position);
+					}
 				}
-				
-				poslist.add(index++, pmname);
-				poslist.add(index++,pmid);
-				poslist.add(index++,pnlist);
-				
-				poslist.add(index++, plist);
-				System.out.println(pmid);
-				System.out.println(pmname);
-				System.out.println(plist);
-				
-					 
-
+				System.out.println(portlist);
+//				System.out.println(portlist.get(i));
+				i ++;
+				portlist.add(p);
+				System.out.println(portlist);
+			}
+			
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
-		System.out.println(poslist);
-		
+		// System.out.println(poslList);
 
-		return poslist;
+		return portlist;
 
 	}
 

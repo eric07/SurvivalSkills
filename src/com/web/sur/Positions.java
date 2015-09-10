@@ -2,13 +2,13 @@ package com.web.sur;
 
 public class Positions {
 	String symbol;
-	int totalqty;
-float closingprice;
-	float closingvalue;
+	String totalqty;
+	String closingprice;
+	String closingvalue;
 	
 	
-	public Positions(String symbol, int totalqty, float closingprice,
-			float closingvalue) {
+	public Positions(String symbol, String totalqty, String closingprice,
+			String closingvalue) {
 		super();
 		this.symbol = symbol;
 		this.totalqty = totalqty;
@@ -16,6 +16,9 @@ float closingprice;
 		this.closingvalue = closingvalue;
 		
 		
+	}
+	public Positions() {
+		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public String toString() {
@@ -32,39 +35,34 @@ float closingprice;
 	}
 	
 	public String getTotalqty() {
-		Integer tq=totalqty;
-		
-		return tq.toString();
+		return this.totalqty;
 	}
 	
-	public String getclosingprice() {
-		Float cp=closingprice;
-		
-		return cp.toString();
-	}
-	
-	public String getclosingvalue() {
-		Float cv=closingvalue;
-		
-		return cv.toString();
-	}
-	
-	public void setTotalqty(int totalqty) {
+	public void setTotalqty(String totalqty) {
 		
 		this.totalqty = totalqty;
 	}
-	public String[] getAttributes(){
-		 Integer tq=totalqty;
-		
-		 Float cp=closingprice;
-		
-		 Float cv=closingvalue;
-		 
-		 String[] stringArr ={symbol, tq.toString(),cp.toString(),cv.toString()};
-		 return stringArr;
-		
+	
+	public String getclosingprice() {
+		return closingprice;
 	}
 	
+	public void setclosingprice (String cp) {
+		
+		this.closingprice = cp;
+	}
 	
+	public String getclosingvalue() {
+		return closingvalue;
+	}
+	public void setclosingvalue (String cv) {
+		
+		this.closingvalue = cv;
+	}
 	
+
+	public String[] getAttributes(){
+				 String[] stringArr ={symbol, totalqty,closingprice, closingvalue};
+		 return stringArr;
+	}
 }

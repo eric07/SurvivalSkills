@@ -14,7 +14,7 @@
 			.ready(
 					function() {
 						$('#createOrder select[id="orderType"]')
-								.change(;
+								.change(
 										function() {
 											if ($(
 													'#createOrder select[id="orderType"] option:selected')

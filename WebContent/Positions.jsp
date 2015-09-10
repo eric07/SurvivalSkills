@@ -5,33 +5,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
-<script>
-	$(document).ready(function() {
-		$(".portfoliooptions").hide();
-		$('#' + "Portfolio1" + '_option').show();
-	});
-	$(document).on('change', '.port_select', function() {
-		$(".portfoliooptions").hide();
-		var portfolio = $(this).val();
-		$('#' + portfolio + '_option').show();
-	});
-</script>
-</head>
-<body>
-	<%@ page import="com.web.sur.*"%>
+<%@ page import="com.web.sur.*"%>
 	<%@ page import="java.io.Serializable"%>
 	<%@ page import="java.util.*"%>
 	<%
 		//Get wanted variables from request
-		ArrayList<Serializable> pl = new ArrayList<Serializable>();
-		pl=(ArrayList<Serializable>)request.getAttribute("Positionlist");
+		ArrayList<Portfolio> pl = (ArrayList<Portfolio>)request.getAttribute("Portfoliolist");
 		String pName =(String) request.getAttribute("pname");
-		String pid =(String) request.getAttribute("pmid");
-		ArrayList<Positions> positionList =new ArrayList<Positions> ();
-				positionList=(ArrayList<Positions>) request.getAttribute("Positionlist");
-		ArrayList<String> pnlist =new ArrayList<String>();
-		pnlist= (ArrayList<String>) request.getAttribute("pnlist");
+		ArrayList<String> portnames =  (ArrayList<String>)request.getAttribute("portnames");
 	%>
+<script>
+$(document).ready(function() {
+	$(".portfoliooptions").hide();
+	$('#' + "Portfolio1" + '_option').show();
+});
+
+	
+</script>
+</head>
+<body>
+	
 	
 	<div id="PM_position">
 		<p>Position Tab</p>
@@ -41,9 +34,10 @@
 			name="selectmenu1" class="port_select">
 
 			<%
-				for (String pname : pnlist) {
+				for (String pname : portnames) {
 			%>
-			<option value=<%=pname%>><%=pname%></option>
+				<% System.out.println(pname); %>
+			<option value="<%=pname%>"><%=pname%></option>
 			<%
 				}
 			%>
@@ -52,10 +46,11 @@
 		
 		<!-- Navigate along all porfolios -->
 			<%
-				for (String pname1 : pnlist) {
+				for (Portfolio port: pl) {
 			%>
 			<table class="portfoliooptions" width="100%"
-				id="<%=(pname1+ "_option")%>" role="grid"
+				<% System.out.println(port.getName()); %>
+				id="<%=(port.getName()+ "_option")%>" role="grid"
 				style="width: 100%;">
 				<thead>
 					<tr role="row">
@@ -82,13 +77,13 @@
 				
 					<!-- Navigate along all positions in a portfolio -->
 					<%
-						for (Positions p : positionList) {
+						for (Positions p : port.poslist) {
 					%>
 					<tr role="row" class="odd">
 
 
 						<%
-							for (Object attribute : p.getAttributes()) {
+							for (String attribute : p.getAttributes()) {
 						%>
 						<td><%=attribute%></td>
 						<%
@@ -106,4 +101,5 @@
 		</div>
 	</div>
 </body>
+
 </html>
