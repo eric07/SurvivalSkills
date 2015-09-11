@@ -47,7 +47,7 @@ public class ServicePosition {
 			rsUser = psUser.executeQuery();
 			if (rsUser.next()) {
 				user_id = rsUser.getString("user_id");
-				System.out.println(user_id);
+//				System.out.println(user_id);
 			}
 			// Get portfolios of current user
 			PreparedStatement psPort = con.prepareStatement(sqlPort);
@@ -63,34 +63,28 @@ public class ServicePosition {
 				psQty.setString(2, port_id);
 				rsQty = psQty.executeQuery();
 				while (rsQty.next()) {
-//					System.out.println(rsQty.getString("o.symbol"));
+					System.out.println(rsQty.getString("o.symbol"));
 					symbol = rsQty.getString("o.symbol");
 					qty = rsQty.getString("totalQty");
 					price = rsQty.getString("s.closing_price");
 					ivalue = Float.parseFloat(price) * Float.parseFloat(qty);
 					value = ivalue.toString();
 					if (!value.equals("0")) {
-						position = new Positions (symbol, qty, price, value);
-//						position.setSymbol(symbol);
-//						position.setTotalqty(qty);
-//						position.setclosingprice(price);
-//						position.setclosingvalue(value);
-//						System.out.println(position);
+						position = new Positions (symbol, qty, price, value);;
 						p.addPos(position);
 					}
 				}
-				System.out.println(portlist);
 //				System.out.println(portlist.get(i));
 				i ++;
 				portlist.add(p);
-				System.out.println(portlist);
+//				System.out.println(portlist);
 			}
 			
 		} catch (SQLException e) {
 
 			e.printStackTrace();
 		}
-		// System.out.println(poslList);
+		 System.out.println(portlist);
 
 		return portlist;
 

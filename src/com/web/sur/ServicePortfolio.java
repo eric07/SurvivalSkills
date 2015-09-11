@@ -70,9 +70,6 @@ public class ServicePortfolio {
 						rs.previous();
 						break;
 					}
-
-					 
-
 				}
 //				System.out.println(olist);
 				String pname = rs1.getString("port_name");
@@ -82,10 +79,7 @@ public class ServicePortfolio {
 //				System.out.println(ol);
 				Portfolio p = new Portfolio(pname,ol);
 				plist.add(p);
-			
-
 			}
-
 //			System.out.println(plist);
 
 		} catch (SQLException e) {

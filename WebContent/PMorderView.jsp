@@ -13,6 +13,9 @@
 <script src="scripts/jquery.js"></script>
 <script src="scripts/jquery-ui.js"></script>
 <script src="scripts/orderView.js"></script>
+<script>
+	
+</script>
 <style>
 fieldset {
 	border: 0;
@@ -29,6 +32,15 @@ select {
 
 .overflow {
 	height: 50px;
+}
+
+#testheight {
+	max-height: 200px;
+	overflow: auto;
+}
+
+.orderview_table{
+table-layout: fixed;
 }
 </style>
 </head>
@@ -48,16 +60,14 @@ select {
 	<nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
 		<div class="navbar-header">
-		<button class="navbar-toggle" type="button" data-toggle="collapse"
+			<button class="navbar-toggle" type="button" data-toggle="collapse"
 				data-target="navbar-collapse">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand"
-				href="#">| Money
-				Tree Corporation, Ltd |</a>
+			<a class="navbar-brand" href="#">| Money Tree Corporation, Ltd |</a>
 		</div>
-		
+
 		<div class="navbar-right">
 			<button class="navbar-toggle" type="button" data-toggle="collapse"
 				data-target="navbar-collapse">
@@ -66,7 +76,7 @@ select {
 			</button>
 			<a class="navbar-brand" href="./logoutServlet">| Logout |</a>
 		</div>
-		
+
 	</div>
 	</nav>
 
@@ -88,8 +98,7 @@ select {
 					<!-- Tab menu to navigate in PM Dashboard  -->
 					<ul>
 						<li><a href="#PM_order_view">Order View</a></li>
-						<li><a href="./PositionServlet">
-								Position </a></li>
+						<li><a href="./PositionServlet"> Position </a></li>
 						<li><a href="PMCreateOrder.jsp">Create Order</a></li>
 					</ul>
 
@@ -111,85 +120,72 @@ select {
 								for (Portfolio portfolio : portfolioList) {
 							%>
 							<h3><%=portfolio.getName()%></h3>
-							<div>
-								<table class="orderview_table" width="100%"
+							<div style="height: 10px;">
+								<table class="orderview_table" style="width:98%;"
 									id="<%=portfolio.getName()%>_table" role="grid"
-									style="width: 100%;">
+									>
 									<thead>
 										<tr role="row">
-											<th class="sorting_asc" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-sort="ascending"
-												aria-label="s activate to sort column descending"
-												style="width: 20px;">Order ID</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Position: activate to sort column ascending"
-												style="width: 30px;">Block ID</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Office: activate to sort column ascending"
-												style="width: 78px;">Symbol</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Age: activate to sort column ascending"
-												style="width: 27px;">Trader ID</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Start date: activate to sort column ascending"
-												style="width: 68px;">Side</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Market Price</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Qty</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Date</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Time</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Type</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Type Parameter</th>
-											<th class="sorting" tabindex="0"
-												aria-controls="DataTables_Table_4" rowspan="1" colspan="1"
-												aria-label="Salary: activate to sort column ascending"
-												style="width: 42px;">Status</th>
+											<th class="sorting_asc" tabindex="0" style="width: 5%;">Order</th>
+											<th class="sorting" tabindex="0" style="width: 5%;">Block</th>
+											<th class="sorting" tabindex="0" style="width: 10%;">Symbol</th>
+											<th class="sorting" tabindex="0" style="width: 5%;">Trader</th>
+											<th class="sorting" tabindex="0" style="width: 5%;">Side</th>
+											<th class="sorting" tabindex="0" style="width: 10%;">Market
+												Price</th>
+											<th class="sorting" tabindex="0" style="width: 5%;">Qty</th>
+											<th class="sorting" tabindex="0" style="width: 15%;">Date</th>
+											<th class="sorting" tabindex="0" style="width: 10%;">Time</th>
+											<th class="sorting" tabindex="0" style="width: 10%;">Type</th>
+											<th class="sorting" tabindex="0" style="width: 10%;">Type
+												Parameter</th>
+
+											<th class="sorting" tabindex="0" style="width: 10%;">Status</th>
 										</tr>
 									</thead>
-
-									<tbody>
-										<!-- Navigate in all orders of one portfolio  -->
-										<%
-											for (Order Order : portfolio.getOrderList()) {
-										%>
-										<div>
-											<tr class="orderrow <%=Order.getStatus()%>">
-												<%
-													for (Object attribute : Order.getAttributes()) {
-												%>
-												<td><%=attribute%></td>
-												<%
-													}
-												%>
-											</tr>
-										</div>
-										<%
-											}
-										%>
-									</tbody>
 								</table>
+								<div id="testheight">
+
+									<table class="orderview_table" style="width:100%;">
+									
+										<thead>
+											<tr class="hidethis" role="row", height="0%">
+												<th class="sorting_asc" tabindex="0" style="width: 5%;"></th>
+												<th class="sorting" tabindex="0" style="width: 5%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+												<th class="sorting" tabindex="0" style="width: 5%;"></th>
+												<th class="sorting" tabindex="0" style="width: 5%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+												<th class="sorting" tabindex="0" style="width: 5%;"></th>
+												<th class="sorting" tabindex="0" style="width: 15%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+												<th class="sorting" tabindex="0" style="width: 10%;"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<!-- Navigate in all orders of one portfolio  -->
+											<%
+												for (Order Order : portfolio.getOrderList()) {
+											%>
+											<div>
+												<tr class="orderrow <%=Order.getStatus()%>">
+													<%
+														for (Object attribute : Order.getAttributes()) {
+													%>
+													<td><%=attribute%></td>
+													<%
+														}
+													%>
+												</tr>
+											</div>
+											<%
+												}
+											%>
+										</tbody>
+									</table>
+								</div>
 
 							</div>
 							<%

@@ -17,15 +17,13 @@
 <script>
 $(document).ready(function() {
 	$(".portfoliooptions").hide();
-	$('#' + "Portfolio1" + '_option').show();
+	$('#' + '<%=portnames.get(0)%>' + '_option').show();
 });
 
 	
 </script>
 </head>
 <body>
-	
-	
 	<div id="PM_position">
 		<p>Position Tab</p>
 		
@@ -36,7 +34,7 @@ $(document).ready(function() {
 			<%
 				for (String pname : portnames) {
 			%>
-				<% System.out.println(pname); %>
+
 			<option value="<%=pname%>"><%=pname%></option>
 			<%
 				}
@@ -49,7 +47,7 @@ $(document).ready(function() {
 				for (Portfolio port: pl) {
 			%>
 			<table class="portfoliooptions" width="100%"
-				<% System.out.println(port.getName()); %>
+
 				id="<%=(port.getName()+ "_option")%>" role="grid"
 				style="width: 100%;">
 				<thead>
