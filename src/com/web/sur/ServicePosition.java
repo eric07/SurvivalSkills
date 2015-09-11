@@ -69,7 +69,9 @@ public class ServicePosition {
 					price = rsQty.getString("s.closing_price");
 					ivalue = Float.parseFloat(price) * Float.parseFloat(qty);
 					value = ivalue.toString();
-					if (!value.equals("0")) {
+					value = "$"+ value;
+					price = "$"+ price;
+					if (!qty.equals("0")) {
 						position = new Positions (symbol, qty, price, value);;
 						p.addPos(position);
 					}

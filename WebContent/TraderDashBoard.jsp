@@ -172,7 +172,7 @@ select {
 			<ul>
 				<li><a href="#T_Block_Create">Blocks</a></li>
 				<li><a href="#T_Workbench">Order Workbench</a></li>
-				<li><a href="#T_Create Order">Create Order</a></li>
+				<li><a href="TraderCreateOrder.jsp">Create Order</a></li>
 				<li><a href="#T_Block_Histroy_View">Block History</a></li>
 			</ul>
 			<div id="T_Block_Create" class="table-container">

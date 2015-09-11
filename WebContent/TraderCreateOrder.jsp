@@ -76,7 +76,7 @@
 		Statement statement1 = connection.createStatement();
 		Statement statement2 = connection.createStatement();
 
-		String sql1 = "select portfolios.pm_id from portfolios, users where portfolios.pm_id = users.user_id and username =?";
+		String sql1 = "select user_id from webtardb3.users where username =?";
 		;
 
 		try {
@@ -85,7 +85,7 @@
 			rs3 = ps.executeQuery();
 
 			if (rs3.next()) {
-				uID = rs3.getString("pm_id");
+				uID = rs3.getString("user_id");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,38 +93,18 @@
 %>
 </head>
 <body>
-	<form id="createOrder" name="createOrder" method="post"
-		action="pmCreateOrderServlet">
-		<input type="hidden" value="<%= uID %>" name="pmid" id="pmid">
+	<form id="createOrder" name="createOrder" method="post" action="traderCreateOrderServlet">
+	<input type="hidden" value="<%= uID %>" name="tid" id="tid">
 		<br> Portfolio: <select ID="portfolioID" name="portfolioID"
 			required>
 			<option value='' disabled selected style='display: none;'>Select
 				a Portfolio</option>
 			<%
 				resultset = statement
-							.executeQuery("select * from portfolios where pm_id = '"
-									+ uID + "'");
+							.executeQuery("select * from portfolios");
 					while (resultset.next()) {
 			%>
 			<option value="<%=resultset.getString(1)%>"><%=resultset.getString(2)%></option>
-			<%
-				}
-			%>
-		</select> <br> Trader ID: <select id="traderID" name="traderID" required>
-			<option value='' disabled selected style='display: none;'>Select
-				Trader ID</option>
-			<%
-				resultset1 = statement1
-							.executeQuery("select f_name,l_name,user_id from users where acc_type = 'trader'");
-					while (resultset1.next()) {
-
-						String traderName;
-						traderName = resultset1.getString(1) + " "
-								+ resultset1.getString(2);
-			%>
-			<option value="<%=resultset1.getString(3)%>">
-				<%=traderName%>
-			</option>
 			<%
 				}
 			%>
@@ -152,6 +132,7 @@
 			<option value="Equity">Equity</option>
 			<option value="Fixed Income">Fixed Income</option>
 		</select>
+
 		<input type="hidden" id="side" name="side" value="">
 		</select> 
 		<br> Order Type: <select id="combineType" name="combineType" required>
@@ -161,16 +142,15 @@
 			<option value="BL">Buy Limit</option>
 			<option value="SM">Sell Market</option>
 			<option value="SL">Sell Limit</option>
-			
-		</select> 
-		<input type="hidden" id="orderType" name="orderType" value="">
-		<input value="Null" placeholder="Enter price value" type="text"
-			name="parameterValue" id="parameterValue"
-			style="width: 100px; height: 29px; display: none;"> <br>
-		Enter Quantity: <input type="number" min="1" name="quantity"
-			id="quantity" required> <br> Enter any Comments: <input
-			type="text" name="comments" id="comments"
-			style="width: 273px; height: 72px;"> <br>
+		</select>
+		<input type="hidden" id="orderType" name="orderType" value=""> 
+		<input value="Null" placeholder="Enter price value" type="text" name="parameterValue" id="parameterValue"
+			style="width: 100px; height: 29px; display: none;"> 
+		<br>Enter Quantity:
+		 <input type="number" min="1" name="quantity" id="quantity" required> 
+		 <br> Enter any Comments: 
+		 <input type="text" name="comments" id="comments" style="width: 273px; height: 72px;"> 
+		 <br>
 		<button type="submit" value="Submit" id="send">Submit Order</button>
 	</form>
 	<%

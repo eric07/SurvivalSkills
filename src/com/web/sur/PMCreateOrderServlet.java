@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -26,69 +27,69 @@ import com.mysql.jdbc.Statement;
  */
 @WebServlet("/pmCreateOrderServlet")
 public class PMCreateOrderServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private Connection connection;
+	private static final long serialVersionUID = 1L;
+	private Connection connection;
 
-    /**
-     * @see Servlet#init(ServletConfig)
-     */
-    public void init(ServletConfig config) throws ServletException {
-        ServletContext sc = config.getServletContext();
-        String driverName = sc.getInitParameter("driverClass");
-        String url = sc.getInitParameter("url");
-        String user = sc.getInitParameter("username");
-        String password = sc.getInitParameter("password");
+	/**
+	 * @see Servlet#init(ServletConfig)
+	 */
+	public void init(ServletConfig config) throws ServletException {
+		ServletContext sc = config.getServletContext();
+		String driverName = sc.getInitParameter("driverClass");
+		String url = sc.getInitParameter("url");
+		String user = sc.getInitParameter("username");
+		String password = sc.getInitParameter("password");
 
-        try {
-            connection = DBconnection.getConnection(driverName, url, user,
-                    password);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+		try {
+			connection = DBconnection.getConnection(driverName, url, user,
+					password);
+			System.out.println(connection);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * @see Servlet#destroy()
-     */
-    public void destroy() {
-        System.out.println("destroy triggered");
-    }
+	/**
+	 * @see Servlet#destroy()
+	 */
+	public void destroy() {
+		System.out.println("destroy triggered");
+	}
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
-     */
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        /*
-         * String username = request.getParameter("username"); String password =
-         * request.getParameter("password");
-         */
-
-        double randNum = (Math.random() * 1000);
-        int primary = (int) randNum;
-        String symbol = request.getParameter("symbol");
-        String quantity = request.getParameter("quantity");
-        String parameterValue = request.getParameter("parameterValue");
-        String side = request.getParameter("side");
-        String orderType = request.getParameter("orderType");
-        String traderID = request.getParameter("traderID");
-        String portfolioID = request.getParameter("portfolioID");
-        String comments = request.getParameter("comments");
-        String securityType = request.getParameter("securityType");
-
-        String qtyEntered = quantity;
-        String qtyOwned = "0";
-        String sqlSumQty = "select sum(qty) from webtardb3.orders where port_id = '" +portfolioID+"' and symbol = '" +symbol+"'";
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		 
+		PrintWriter out = response.getWriter();
+		System.out.println("in dopost...");
+		boolean flag = false;
+		double randNum = (Math.random() * 1000);
+		int primary = (int) randNum;
+		String symbol = request.getParameter("symbol");
+		String quantity = request.getParameter("quantity");
+		String parameterValue = request.getParameter("parameterValue");
+		String side = request.getParameter("side");
+		String orderType = request.getParameter("orderType");
+		String traderID = request.getParameter("traderID");
+		String portfolioID = request.getParameter("portfolioID");
+		String comments = request.getParameter("comments");
+		String securityType = "Equity";//request.getParameter("securityType");
+		String pmID = request.getParameter("pmid");
         
         
-        // check if portfolio holds the stock. Return to form if not
-        String sqlSymbol = "select distinct symbol from webtardb3.orders where port_id = '"
-                + portfolioID + "'";
-        ResultSet rs = null;
-        ResultSet rsQty = null;
         try {
+        	String qtyEntered = quantity;
+            String qtyOwned = "0";
+            String sqlSumQty = "select sum(qty) from webtardb3.orders where port_id = '" +portfolioID+"' and symbol = '" +symbol+"'";
+            
+            String sqlSymbol = "select distinct symbol from webtardb3.orders where port_id = '"
+                    + portfolioID + "'";
+            ResultSet rs = null;
+            ResultSet rsQty = null;
             PreparedStatement ps = connection.prepareStatement(sqlSymbol);
             PreparedStatement ps2 = connection.prepareStatement(sqlSumQty);
             rs = ps.executeQuery();
@@ -101,114 +102,82 @@ public class PMCreateOrderServlet extends HttpServlet {
                 String symbolCheck = rs.getString("symbol");
                 shares.add(symbolCheck);
             }
-            boolean flag = false;
             if ((side.equals("Sell") && shares.contains(symbol) && qtyOwned.compareTo(qtyEntered) >= 0) || side.equals("Buy")) {
                 flag = true;
+                System.out.println(qtyOwned);
+                System.out.println(qtyEntered);
                 
-            } else {
-            	PrintWriter out = response.getWriter();
-                System.out.println("Alert: no match");
-                out.println("<script type=\"text/javascript\">");
-                out.println("alert('Cannot sell security not owned');");
-                out.println("location='PMorderView.jsp';");
-                out.println("</script>");
-//                System.out.println(side.equals("Sell"));
-//                System.out.println(shares.contains(symbol));
-//                System.out.println(qtyOwned.compareTo(qtyEntered));
-            }
-
-            if (flag && side.equals("Buy")) {
-                String sql = "Insert into webtardb3.orders (order_id,symbol,qty,parameter_price,side,status,timestamp,type,pm_id,trader_id,port_id,block_id,comment,security_type) values ("
-                        + "'o"
-                        + primary
-                        + "','"
-                        + symbol
-                        + "',"
-                        + quantity
-                        + ","
-                        + parameterValue
-                        + ",'"
-                        + side
-                        + "','"
-                        + "New"
-                        + "',"
-                        + "CURRENT_TIMESTAMP"
-                        + ",'"
-                        + orderType
-                        + "','"
-                        + "p001"
-                        + "','"
-                        + traderID
-                        + "','"
-                        + portfolioID
-                        + "','"
-                        + "b000'"
-                        + ",'"
-                        + comments
-                        + "','"
-                        + securityType + "');";
-                System.out.println(sql);
-
-                try {
-
-                    java.sql.Statement stmt = connection.createStatement();
-                    stmt.execute(sql);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/PMOrderViewServlet");
-                    dispatcher.forward(request, response);
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            
-            if (flag && side.equals("Sell")) {
-                String sql = "Insert into webtardb3.orders (order_id,symbol,qty,parameter_price,side,status,timestamp,type,pm_id,trader_id,port_id,block_id,comment,security_type) values ("
-                        + "'o"
-                        + primary
-                        + "','"
-                        + symbol
-                        + "',-"
-                        + quantity
-                        + ","
-                        + parameterValue
-                        + ",'"
-                        + side
-                        + "','"
-                        + "New"
-                        + "',"
-                        + "CURRENT_TIMESTAMP"
-                        + ",'"
-                        + orderType
-                        + "','"
-                        + "p001"
-                        + "','"
-                        + traderID
-                        + "','"
-                        + portfolioID
-                        + "','"
-                        + "b000'"
-                        + ",'"
-                        + comments
-                        + "','"
-                        + securityType + "');";
-
-                try {
-
-                    java.sql.Statement stmt1 = connection.createStatement();
-                    stmt1.execute(sql);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/PMOrderViewServlet");
-                    dispatcher.forward(request, response);
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            } 
+        }catch(Exception e){
+        	e.printStackTrace();
         }
-
-
-    }
+		
+		/*System.out.println(symbol);
+		System.out.println(quantity);
+		System.out.println(parameterValue);
+		System.out.println(side);
+		System.out.println(orderType);
+		System.out.println(traderID);
+		System.out.println(portfolioID);
+		System.out.println(comments);
+		System.out.println(securityType);*/
+		
+		try{
+			System.out.println("inside try...");
+			
+			String sql="select order_id from orders order by order_id";
+			PreparedStatement ps=connection.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			
+			String currentid = "";
+			int max = 0;
+			int curnum = 0;
+			while(rs.next()){
+				 currentid = rs.getString("order_id");
+				 curnum = Integer.parseInt(currentid.substring(1));
+				 if(curnum > max)
+					 max = curnum;
+			}
+			max++;
+			String neworderid = "o" + max;
+			
+			sql = "SELECT market_price FROM securities WHERE symbol = ?";
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, symbol);
+			rs = ps.executeQuery();
+			rs.next();
+			float price=rs.getFloat("market_price");
+			System.out.println("market price: " + price);
+			
+			int intquantity=Integer.parseInt(quantity);
+			
+			float fparametervalue = 0;
+			System.out.println("param equals null: " + parameterValue.equals("Null"));
+			if(!parameterValue.equals("Null"))
+				fparametervalue=Float.parseFloat(parameterValue);
+			
+			Order1 o =new Order1(neworderid,null, symbol, traderID, side, price,
+					intquantity, null, orderType, fparametervalue, "New", portfolioID, pmID, comments, securityType);
+			
+			ServiceCreateOrder sco=new ServiceCreateOrder();
+			
+			if (flag){
+				System.out.println("trade executed");
+				sco.insertIntoDB(o, connection);
+                
+			}
+			else{
+                System.out.println("Alert: no match");
+			}	
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/PMOrderViewServlet");
+            dispatcher.forward(request, response);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println("out of try...");
+	}
 }
